@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
 body{font-family:Arial;margin:0;padding:10px;background:#fff}
-h3{margin:0 0 10px 0}
+h3{margin:0 0 10px}
 .news{border-bottom:1px solid #ddd;padding:8px 0}
 .news a{text-decoration:none;color:#000}
 .news b{font-size:15px}
@@ -19,30 +19,29 @@ small{color:#666}
 <div id="berita">Memuat berita...</div>
 
 <script>
-var xhr = new XMLHttpRequest();
-xhr.open("GET","https://api-berita-indonesia.vercel.app/detik/terbaru",true);
-xhr.onreadystatechange = function(){
-  if(xhr.readyState === 4){
-    if(xhr.status === 200){
-      var data = JSON.parse(xhr.responseText);
-      var html = "";
-      data.data.posts.slice(0,5).forEach(function(b){
-        html +=
-          '<div class="news">' +
-            '<a href="'+b.link+'" target="_blank">' +
-              '<b>'+b.title+'</b>' +
-            '</a><br>' +
-            '<small>'+b.pubDate+'</small>' +
-          '</div>';
-      });
-      document.getElementById("berita").innerHTML = html;
-    } else {
-      document.getElementById("berita").innerHTML =
-        "Gagal memuat berita (API diblok).";
-    }
-  }
-};
-xhr.send();
+var API =
+  "https://api.allorigins.win/raw?url=" +
+  encodeURIComponent("https://api-berita-indonesia.vercel.app/detik/terbaru");
+
+fetch(API)
+.then(function(r){ return r.json(); })
+.then(function(data){
+  var html = "";
+  data.data.posts.slice(0,5).forEach(function(b){
+    html +=
+      '<div class="news">' +
+        '<a href="'+b.link+'" target="_blank">' +
+          '<b>'+b.title+'</b>' +
+        '</a><br>' +
+        '<small>'+b.pubDate+'</small>' +
+      '</div>';
+  });
+  document.getElementById("berita").innerHTML = html;
+})
+.catch(function(){
+  document.getElementById("berita").innerHTML =
+    "Gagal memuat berita (proxy error).";
+});
 </script>
 
 </body>
