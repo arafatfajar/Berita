@@ -19,28 +19,27 @@ small{color:#666}
 <div id="berita">Memuat berita...</div>
 
 <script>
-var API =
-  "https://api.allorigins.win/raw?url=" +
-  encodeURIComponent("https://api-berita-indonesia.vercel.app/detik/terbaru");
+var RSS_URL = "https://rss.detik.com/index.php/detikcom";
+var API = "https://api.rss2json.com/v1/api.json?rss_url=" + encodeURIComponent(RSS_URL);
 
 fetch(API)
 .then(function(r){ return r.json(); })
 .then(function(data){
   var html = "";
-  data.data.posts.slice(0,5).forEach(function(b){
+  data.items.slice(0,5).forEach(function(item){
     html +=
       '<div class="news">' +
-        '<a href="'+b.link+'" target="_blank">' +
-          '<b>'+b.title+'</b>' +
+        '<a href="'+item.link+'" target="_blank">' +
+          '<b>'+item.title+'</b>' +
         '</a><br>' +
-        '<small>'+b.pubDate+'</small>' +
+        '<small>'+item.pubDate+'</small>' +
       '</div>';
   });
   document.getElementById("berita").innerHTML = html;
 })
 .catch(function(){
   document.getElementById("berita").innerHTML =
-    "Gagal memuat berita (proxy error).";
+    "Gagal memuat berita.";
 });
 </script>
 
